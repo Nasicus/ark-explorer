@@ -1,14 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import {Transaction} from '../../../models/transaction.model';
 
 @Component({
   selector: 'ark-address-transactions',
-  templateUrl: './address-transactions.component.html',
-  styleUrls: ['./address-transactions.component.less']
+  templateUrl: './address-transactions.component.html'
 })
 export class AddressTransactionsComponent implements OnInit {
   @Input() id: string;
-  @Input() items: any[];
+  @Input() items: Transaction[];
   @Input() curName: string;
   @Input() curValue: number;
 
@@ -17,19 +17,7 @@ export class AddressTransactionsComponent implements OnInit {
   ngOnInit() {
   }
 
-  goToAddress(event, id: string) {
-    event.preventDefault();
-    this.router.navigate(['/address', id]);
+  getAddressLink(id: string) {
+    return ['/address', id];
   }
-
-  goToBlock(event, id: string) {
-    event.preventDefault();
-    this.router.navigate(['/block', id]);
-  }
-
-  goToTransaction(event, id: string) {
-    event.preventDefault();
-    this.router.navigate(['/tx', id]);
-  }
-
 }

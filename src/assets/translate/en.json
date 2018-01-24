@@ -2,8 +2,10 @@
     "GENERAL": {
         "COPY_CLIPBOARD": "Copy to clipboard",
         "WELL_CONFIRMED": "Well Confirmed",
+        "DETAILS": "Details",
         "MORE": "More",
         "LOADING": "loading",
+        "LOAD_ALL": "Load All",
         "NEXT_PAGE": "Next page",
         "PREV_PAGE": "Previous page",
         "ACTIVE": "Active",
@@ -59,8 +61,9 @@
     },
     "EXPLORER": {
         "TX_TITLE": "Latest Transactions",
+        "SHOW_ALL_TRANSACTIONS_BUTTON": "See All Transactions",
         "BLOCK_TITLE": "Latest Blocks",
-        "BUTTON": "See All Blocks"
+        "SHOW_ALL_BLOCKS_BUTTON": "See All Blocks"
     },
     "ADDRESS": {
         "TITLE": "Address Summary",
@@ -68,7 +71,10 @@
         "DELEGATE_TITLE": "Delegate",
         "VOTES_TITLE": "Votes",
         "VOTERS_TITLE": "Voters",
-        "TX_TITLE": "Transactions"
+        "TX_TITLE": "Transactions",
+        "VOTES_PERCENTAGE": "% of votes",
+        "VOTER_DETAILS": "View Voter Details",
+        "ERROR": "There was an error getting information for the address '{{ address }}'! Are you sure this is a correct address?"
     },
     "TRANSACTION": {
         "TITLE": "Transaction",
@@ -80,14 +86,16 @@
             "SIGNATURE": "Second signature creation",
             "DELEGATE": "Delegate registration"
         },
-        "NO_TRANSACTIONS": "There are no transactions involving this address"
+      "NO_TRANSACTIONS": "There are no transactions involving this address",
+      "ERROR": "There was an error getting the transaction with the id '{{ id }}'! Are you sure this transaction exists?"
     },
     "BLOCK": {
         "TITLE": "Block",
         "ID": "Block ID",
         "SUMMARY_TITLE": "Summary",
         "TX_TITLE": "Transactions",
-        "PREV_BLOCK": "Previous block"
+        "PREV_BLOCK": "Previous block",
+        "ERROR": "There was an error getting the block with the id '{{ id }}'! Are you sure this blocks exists?"
     },
     "BLOCK_LIST": {
         "TITLE": "Blocks"
@@ -159,6 +167,7 @@
     },
     "HEADER": {
         "SEARCH": "Find a block, transaction, address or delegate...",
+        "SEARCH_NO_RESULTS": "Sorry, no results for your search - {{ query }} - were found.",
         "TOOLS": {
             "TITLE": "Tools",
             "SNAPSHOTS": "Snapshots"

@@ -1,12 +1,14 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-
 import { ExplorerService } from '../../shared/services/explorer.service';
 import { CurrencyService } from '../../shared/services/currency.service';
-import { CoinmarketService } from "../../shared/services/coinmarket.service";
-import { ConnectionMessageService } from "../../shared/services/connection-message.service";
+import { CoinmarketService } from '../../shared/services/coinmarket.service';
+import { ConnectionMessageService } from '../../shared/services/connection-message.service';
 import { initCurrency } from '../../shared/const/currency';
+import { ThemeService } from '../../shared/services/theme.service';
+import {Transaction} from '../../models/transaction.model';
+import {Block} from '../../models/block.model';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'ark-explorer',
@@ -15,15 +17,16 @@ import { initCurrency } from '../../shared/const/currency';
   providers: [ExplorerService, CoinmarketService]
 })
 export class ExplorerComponent implements OnInit, OnDestroy {
-  public transactions: any;
-  public blocks: any;
+  public transactions: any[];
+  public blocks: any[];
   public chart: any;
+  public isChartVisible: boolean;
   public currency: string = initCurrency.name;
   public currencyRate: number = initCurrency.value;
-  public activeChartTab: string = 'day';
-  public showTransactionLoader: boolean = false;
-  public showBlockLoader: boolean = false;
-  
+  public activeChartTab = 'day';
+  public showTransactionLoader = false;
+  public showBlockLoader = false;
+
   private _timer = null;
   private subscription: Subscription;
   private chartSubscription: Subscription;
@@ -33,6 +36,7 @@ export class ExplorerComponent implements OnInit, OnDestroy {
     private _currencyService: CurrencyService,
     private _marketService: CoinmarketService,
     private _connectionService: ConnectionMessageService,
+    private _themeService: ThemeService,
     private router: Router
   ) {
     this.subscription = _currencyService.currencyChosen$.subscribe(currency => {
@@ -40,50 +44,27 @@ export class ExplorerComponent implements OnInit, OnDestroy {
       this.currencyRate = currency.value;
     });
 
-    this.chartSubscription = _marketService.chartBuilt$.subscribe(chart => {
-      this.chart = chart;
-    });
+    this._themeService.displayTogglePriceChartSwitch = true;
+    this._themeService.isPriceChartChange$.subscribe(isVisible => this.isChartVisible = isVisible);
+
+    this.chartSubscription = this._marketService.chartBuilt$.subscribe(chart => this.chart = chart);
   }
 
   ngOnInit() {
     window.scrollTo(0, 0);
+
     this.showTransactionLoader = true;
     this.showBlockLoader = true;
-    this._explorerService.getLastTransactions().subscribe(
-      res => {
-        this.transactions = res.transactions;
-        this._connectionService.changeConnection(res.success);
-        this.showTransactionLoader = !res.success;        
-      }
-    );
 
-    this._explorerService.getLastBlocks().subscribe(
-      res => {
-        this.blocks = res.blocks;
-        this._connectionService.changeConnection(res.success);
-        this.showBlockLoader = !res.success;
-      }
-    );
-    this._marketService.build(this.activeChartTab);
-    this.getNewData();
-  }
+    this.getLastTransactions();
+    this.getLastBlocks();
 
-  getNewData() {
     this._timer = setInterval(() => {
-      this._explorerService.getLastTransactions().subscribe(
-        res => {
-          this.transactions = res.transactions;
-          this._connectionService.changeConnection(res.success);
-        }
-      );
+      this.getLastTransactions();
+      this.getLastBlocks();
+    }, 60000);
 
-      this._explorerService.getLastBlocks().subscribe(
-        res => {
-          this.blocks = res.blocks;
-          this._connectionService.changeConnection(res.success);
-        }
-      );
-    }, 10000);
+    this._marketService.build(this.activeChartTab);
   }
 
   updateChart(event) {
@@ -91,22 +72,12 @@ export class ExplorerComponent implements OnInit, OnDestroy {
     this._marketService.build(this.activeChartTab);
   }
 
-  goToAddress(event, id: string) {
-    event.preventDefault();
-    this.router.navigate(['/address', id]);
-  }
-
-  goToTransaction(event, id: string) {
-    event.preventDefault();
-    this.router.navigate(['/tx', id]);
-  }
-
-  goToBlock(event, id: string) {
-    event.preventDefault();
-    this.router.navigate(['/block', id]);
+  getAddressLink(id: string) {
+    return ['/address', id];
   }
 
   ngOnDestroy() {
+    this._themeService.displayTogglePriceChartSwitch = false;
     this.subscription.unsubscribe();
     this.chartSubscription.unsubscribe();
     if (this._timer) {
@@ -114,4 +85,23 @@ export class ExplorerComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getLastTransactions() {
+    this._explorerService.getLastTransactions().subscribe(
+      res => {
+        this.transactions = res.transactions;
+        this._connectionService.changeConnection(true);
+        this.showTransactionLoader = false;
+      }
+    );
+  }
+
+  private getLastBlocks() {
+    this._explorerService.getLastBlocks(0).subscribe(
+      res => {
+        this.blocks = res.blocks;
+        this._connectionService.changeConnection(true);
+        this.showBlockLoader = false;
+      }
+    );
+  }
 }

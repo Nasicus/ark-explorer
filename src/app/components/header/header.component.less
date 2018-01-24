@@ -33,11 +33,15 @@ header {
   .ark-header-items {
     width: 1024px;
     justify-content: inherit;
+
+    li.ark-toggle-switch-spacer {
+      width: 1em;
+    }
   }
   nav {
     display: inline-block;
     font-size: 14px;
-    font-family: 'Avenir';
+    font-family: 'Avenir', serif;
     font-weight: 900;
     margin-left: 65px;
   }
@@ -102,20 +106,23 @@ header {
 
 
 .ark-header-data {
-  font-size: 12px;
+  font-size: 11px;
   color: @light-body-color;
-  font-family: 'Comfortaa-Regular';
+  font-family: 'Comfortaa-Regular', serif;
   align-items: center;
   background: @light-subheader-bg;
   height: 40px;
   padding: 0 20px;
   .ark-data-item {
+    .ark-item-nethash .ark-index-data {
+      text-transform: capitalize;
+    }
     .ark-item-index {
       margin-right: 30px;
       overflow: hidden;
       white-space: nowrap;
       .ark-index-title {
-        font-family: 'Comfortaa-Bold';
+        font-family: 'Comfortaa-Bold', serif;
         color: @light-subheader-label-color;
       }
       .ark-index-data {
@@ -136,7 +143,7 @@ header {
   background: @color-gray-10;
   text-align: center;
   font-size: 13px;
-  font-family: 'Avenir';
+  font-family: 'Avenir', serif;
   padding: 15px 0;
 
   i {
